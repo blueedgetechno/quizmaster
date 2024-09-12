@@ -8,7 +8,17 @@
   "bracketSpacing": true,
   "arrowParens": "always",
   "endOfLine": "auto",
-  "importOrder": ["^(react | @redux)(.*)?$", "^next(.*)?$", "<THIRD_PARTY_MODULES>", "@/(.*)$", "^(.*)css$", "^[./]"],
+  "importOrder": [
+    "^react(.*)?$",
+    "^@redux(.*)?$",
+    "^next(.*)?$",
+    "<THIRD_PARTY_MODULES>",
+    "@/components/(.*)$",
+    "@/store(.*)$",
+    "@/(.*)$",
+    "^(.*)css$",
+    "^[./]"
+  ],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
   "plugins": ["@trivago/prettier-plugin-sort-imports"]
