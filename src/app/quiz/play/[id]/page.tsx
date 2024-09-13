@@ -10,7 +10,7 @@ import { useAppSelector } from '@/store/hooks'
 
 import { useToast } from '@/hooks/use-toast'
 
-export const Screen = ({ params }: { params: { id: number } }) => {
+export default function Screen({ params }: { params: { id: number } }) {
   // TODO: Optimise this
   const task = useAppSelector((state) => state.app.tasks.find((x) => x.id == params.id)) // || { topic: 'Untitled Task' })
 
@@ -37,5 +37,3 @@ export const Screen = ({ params }: { params: { id: number } }) => {
     </div>
   )
 }
-
-export default Screen

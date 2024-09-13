@@ -126,7 +126,7 @@ const CreateQuiz = ({ task }: { task: Partial<Task> | undefined }) => {
   )
 }
 
-export const Screen = () => {
+export default function Screen() {
   const [task, setTask] = useState<Partial<Task>>()
 
   return (
@@ -136,5 +136,3 @@ export const Screen = () => {
     </div>
   )
 }
-
-export default Screen
