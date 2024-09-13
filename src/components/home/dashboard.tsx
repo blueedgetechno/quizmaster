@@ -9,7 +9,7 @@ import { Button, Table, TableBody, TableCell, TableFooter, TableHead, TableHeade
 
 import { useAppSelector } from '@/store/hooks'
 
-import { doubleDigit, minifyDate } from '@/lib/utils'
+import { minifyDate } from '@/lib/utils'
 import { TaskState, TaskStateOrder, TaskStateText } from '@/types'
 
 export function Screen() {

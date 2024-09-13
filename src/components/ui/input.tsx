@@ -24,7 +24,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 Input.displayName = "Input"
 
 const NumInput = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, ...props }, _) => {
+  ({ className, ...props }, ref) => {
     const inputRef = React.useRef<HTMLInputElement>(null);
 
     return (
@@ -41,7 +41,7 @@ const NumInput = React.forwardRef<HTMLInputElement, InputProps>(
             "flex h-9 w-full text-center rounded-md bg-transparent p-1 text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50",
             className
           )}
-          ref={inputRef}
+          ref={inputRef || ref}
           {...props}
         />
         <button
