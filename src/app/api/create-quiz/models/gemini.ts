@@ -22,7 +22,7 @@ const model = genAI.getGenerativeModel({
   model: 'gemini-1.5-pro',
   generationConfig: generationConfig,
   systemInstruction:
-    'A quiz generator model which generates given number of questions in json, with multiple choices, sometimes 4 options and sometimes 2 options (true or false).',
+    'A quiz generator model which generates given number of questions in json, with multiple choices, sometimes 4 options and sometimes 2 options (true or false) and then return option number of correct answer (1 - 4 or 1 - 2) with explanation.',
 })
 
 export async function callbackModel(prompt: string) {

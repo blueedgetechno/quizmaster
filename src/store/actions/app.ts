@@ -10,7 +10,7 @@ const validateQuestion = (x: Question) => {
   if (!x.choices || !x.choices.length) return false
   if (!x.choices.every((x) => x && x.length)) return false
 
-  if (!x.correctResponse) return false
+  if (x.correctResponse == null) return false
   if (x.correctResponse < 0 || x.correctResponse >= x.choices.length) return false
 
   return true

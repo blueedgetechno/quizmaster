@@ -19,13 +19,13 @@ export function Screen() {
   return (
     <div className='h-full px-2 py-8'>
       <div className='flex'>
-        <div className='w-3/4'>
+        <div className='w-full md:w-[880px]'>
           <h2 className='text-xl font-semibold mb-4'>History</h2>
           <div className='border border-2 border-gray-200 rounded-md'>
             <Table className='overflow-hidden h-max'>
               <TableHeader>
                 <TableRow className='bg-gray-200'>
-                  <TableHead className='w-[100px]'>S.No.</TableHead>
+                  <TableHead className='w-0'>S.No.</TableHead>
                   <TableHead>Topic</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Last Acted</TableHead>
@@ -47,8 +47,8 @@ export function Screen() {
                         <TableCell className='font-medium'>&nbsp;{i + 1}.</TableCell>
                         <TableCell>{task.topic}</TableCell>
                         <TableCell>
-                          <span className='flex items-center gap-x-2'>
-                            {TaskStateText[task.state]}
+                          <span className='flex items-center text-right gap-x-2'>
+                            <p className='hidden md:block'>{TaskStateText[task.state]}</p>
                             {task.state === TaskState.COMPLETED && (
                               <CheckCircledIcon className='w-4 h-4 text-green-500' />
                             )}
@@ -57,14 +57,11 @@ export function Screen() {
                           </span>
                         </TableCell>
                         <TableCell>{minifyDate(task.lastEdited)}</TableCell>
-                        <TableCell className='text-right'>
+                        <TableCell className='text-right w-0'>
                           {(task.state === TaskState.IDLE || task.state === TaskState.ACTIVE) && (
-                            <Button
-                              size='icon'
-                              className='rounded-full'
-                              onClick={() => router.push(`/quiz/play/${task.id}`)}
-                            >
-                              <ChevronRightIcon className='h-6 w-6' />
+                            <Button className='rounded-full' onClick={() => router.push(`/quiz/play/${task.id}`)}>
+                              <span className='hidden md:block'>Continue</span>
+                              <ChevronRightIcon className='block md:hidden h-6 w-6' />
                             </Button>
                           )}
                         </TableCell>
