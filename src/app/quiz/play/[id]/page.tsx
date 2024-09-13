@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast'
 
 export default function Screen({ params }: { params: { id: number } }) {
   // TODO: Optimise this
-  const task = useAppSelector((state) => state.app.tasks.find((x) => x.id == params.id)) // || { topic: 'Untitled Task' })
+  const task = useAppSelector((state) => state.app.tasks.find((x) => x.id == params.id))
 
   const { toast } = useToast()
   const router = useRouter()
@@ -29,7 +29,7 @@ export default function Screen({ params }: { params: { id: number } }) {
     router.push('/')
   }, [task])
 
-  if (!task) return <div className='h-full flex justify-center pt-36'>Quiz not found</div>
+  if (!task) return <div className='h-full flex justify-center py-[20vh]'>Quiz not found</div>
 
   return (
     <div className='h-full'>

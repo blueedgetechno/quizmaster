@@ -31,13 +31,37 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-y: scroll;
 
   height: 100vh;
   background: var(--background-light);
 }
 
+.app-nav-box {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--background-light);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+
+  background-color: var(--background-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 16px;
+}
+
 .app,
-.app-nav {
+.app-nav,
+.foot-nav {
   width: 100%;
   max-width: 1500px;
 
@@ -110,6 +134,7 @@ input[type='number'] {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;

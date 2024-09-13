@@ -29,8 +29,11 @@ export async function POST(req: NextRequest) {
         difficulty: data.difficulty,
       })
     )
-    return Response.json(JSON.parse(responseData))
+
+    return Response.json(responseData)
   } catch (error) {
+    console.log(error)
+
     return Response.json({ error: error }, { status: 500 })
   }
 }

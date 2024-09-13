@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-import { CheckCircledIcon, ChevronRightIcon, RadiobuttonIcon, ResumeIcon } from '@radix-ui/react-icons'
+import { CheckCircledIcon, RadiobuttonIcon, ResumeIcon } from '@radix-ui/react-icons'
 
 import { Button, Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui'
 
@@ -19,15 +19,15 @@ export function Screen() {
   return (
     <div className='h-full px-2 py-8'>
       <div className='flex'>
-        <div className='w-full md:w-[880px]'>
+        <div className='w-full md:w-auto'>
           <h2 className='text-xl font-semibold mb-4'>History</h2>
           <div className='border border-2 border-gray-200 rounded-md'>
-            <Table className='overflow-hidden h-max'>
+            <Table className='w-max h-max overflow-hidden'>
               <TableHeader>
                 <TableRow className='bg-gray-200'>
-                  <TableHead className='w-0'>S.No.</TableHead>
-                  <TableHead>Topic</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>S.No.</TableHead>
+                  <TableHead className='w-96'>Topic</TableHead>
+                  <TableHead className='text-center md:text-left md:w-36'>Status</TableHead>
                   <TableHead>Last Acted</TableHead>
                   <TableHead className='text-right'></TableHead>
                 </TableRow>
@@ -47,8 +47,8 @@ export function Screen() {
                         <TableCell className='font-medium'>&nbsp;{i + 1}.</TableCell>
                         <TableCell>{task.topic}</TableCell>
                         <TableCell>
-                          <span className='flex items-center text-right gap-x-2'>
-                            <p className='hidden md:block'>{TaskStateText[task.state]}</p>
+                          <span className='flex items-center justify-end md:justify-start gap-x-2'>
+                            <p>{TaskStateText[task.state]}</p>
                             {task.state === TaskState.COMPLETED && (
                               <CheckCircledIcon className='w-4 h-4 text-green-500' />
                             )}
@@ -57,11 +57,22 @@ export function Screen() {
                           </span>
                         </TableCell>
                         <TableCell>{minifyDate(task.lastEdited)}</TableCell>
-                        <TableCell className='text-right w-0'>
+                        <TableCell className='text-right'>
                           {(task.state === TaskState.IDLE || task.state === TaskState.ACTIVE) && (
-                            <Button className='rounded-full' onClick={() => router.push(`/quiz/play/${task.id}`)}>
-                              <span className='hidden md:block'>Continue</span>
-                              <ChevronRightIcon className='block md:hidden h-6 w-6' />
+                            <Button
+                              size='sm'
+                              className='bg-blue-400 rounded-full'
+                              onClick={() => router.push(`/quiz/play/${task.id}`)}
+                              asChild
+                            >
+                              <Link href={`/quiz/play/${task.id}`}>Continue</Link>
+                            </Button>
+                          )}
+                          {task.state === TaskState.COMPLETED && (
+                            <Button size='sm' className='text-primary rounded-full' variant='link' asChild>
+                              <Link href={`/quiz/play/${task.id}`}>
+                                <u>Result</u>
+                              </Link>
                             </Button>
                           )}
                         </TableCell>

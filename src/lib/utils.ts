@@ -14,10 +14,19 @@ export function useAsync<T>() {
 
   const callFn = (fn: () => Promise<T>) => {
     setIsLoading(true)
+    setError(null)
 
     fn()
       .then((data) => setData(data))
-      .catch((error) => setError(error.message || error.data?.message || error))
+      .catch((error) => {
+        setError(
+          error.response?.data?.error?.statusText ||
+            error.response?.statusText ||
+            error.message ||
+            error.data?.message ||
+            error
+        )
+      })
       .finally(() => setIsLoading(false))
   }
 

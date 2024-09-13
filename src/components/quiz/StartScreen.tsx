@@ -12,7 +12,7 @@ export const StartScreen = ({ task }: { task: Task }) => {
   const handleStart = () => dispatch({ type: 'app/startQuiz', payload: task.id })
 
   return (
-    <div className='h-full flex justify-center pt-36'>
+    <div className='h-full flex justify-center pt-[20vh] pb-8'>
       <div className='w-72 flex flex-col'>
         <div className='space-y-1'>
           <h4 className='text-xl font-semibold leading-none'>{task.topic}</h4>

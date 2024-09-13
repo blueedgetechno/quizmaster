@@ -17,16 +17,40 @@ const _Slice = createSlice({
     addTask: (state, action: { payload: Task }) => {
       state.education.grade = action.payload.grade
 
-      state.tasks.push(action.payload)
+      const new_tasks = state.tasks.filter((x) => x.id !== action.payload.id)
+      new_tasks.push({ ...action.payload })
+
+      state.tasks = [...new_tasks]
     },
     startQuiz: (state, action: { payload: number }) => {
       const index = state.tasks.findIndex((x) => x.id === action.payload)
       if (index === -1) return
 
-      state.tasks[index].state = TaskState.ACTIVE
-      state.tasks[index].resumeIndex = 0
+      const task = { ...state.tasks[index] }
 
-      state.tasks[index].lastEdited = new Date().toISOString()
+      task.state = TaskState.ACTIVE
+      task.resumeIndex = 0
+      task.lastEdited = new Date().toISOString()
+
+      state.tasks[index] = { ...task }
+    },
+    reStartQuiz: (state, action: { payload: number }) => {
+      const index = state.tasks.findIndex((x) => x.id === action.payload)
+      if (index === -1) return
+
+      const task = { ...state.tasks[index] }
+
+      task.state = TaskState.IDLE
+      task.resumeIndex = 0
+
+      task.questions = [...task.questions.map((x) => ({ ...x }))].map((x) => ({
+        ...x,
+        userResponse: null,
+        isCorrect: null,
+      }))
+
+      task.lastEdited = new Date().toISOString()
+      state.tasks[index] = { ...task }
     },
     answerQuestion: (state, action) => {
       const data = action.payload as {
@@ -40,19 +64,25 @@ const _Slice = createSlice({
       const taskIndex = state.tasks.findIndex((x) => x.id === data.taskId)
       if (taskIndex === -1) return
 
-      const ques = state.tasks[taskIndex].questions[data.questionIndex]
+      const task = { ...state.tasks[taskIndex] }
+      task.questions = [...task.questions.map((x) => ({ ...x }))]
+
+      const ques = { ...task.questions[data.questionIndex] }
       if (!ques) return
 
       ques.userResponse = data.userResponse
       ques.isCorrect = ques.userResponse === ques.correctResponse
 
-      state.tasks[taskIndex].lastEdited = new Date().toISOString()
+      task.questions[data.questionIndex] = { ...ques }
+
+      task.lastEdited = new Date().toISOString()
+      state.tasks[taskIndex] = { ...task }
     },
     nextQuestion: (state, action: { payload: number }) => {
       const taskIndex = state.tasks.findIndex((x) => x.id === action.payload)
       if (taskIndex === -1) return
 
-      const task = state.tasks[taskIndex]
+      const task = { ...state.tasks[taskIndex] }
 
       if (task.resumeIndex >= task.questions.length - 1) {
         task.state = TaskState.COMPLETED
@@ -61,6 +91,7 @@ const _Slice = createSlice({
       }
 
       task.lastEdited = new Date().toISOString()
+      state.tasks[taskIndex] = { ...task }
     },
   },
 })

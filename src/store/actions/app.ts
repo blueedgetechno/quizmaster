@@ -11,7 +11,7 @@ const validateQuestion = (x: Question) => {
   if (!x.choices.every((x) => x && x.length)) return false
 
   if (x.correctResponse == null) return false
-  if (x.correctResponse < 0 || x.correctResponse >= x.choices.length) return false
+  if (x.correctResponse < 0 || x.correctResponse > x.choices.length) return false
 
   return true
 }
@@ -19,13 +19,19 @@ const validateQuestion = (x: Question) => {
 export const createTask = async (task: Partial<Task>) => {
   const res = await axios.post('/api/create-quiz', task)
 
-  const quesData = (res.data as Question[]).filter((x) => validateQuestion(x))
+  const quesData = (res.data as Question[]).filter((x) => {
+    const validity = validateQuestion(x)
+
+    if (!validity) console.log('Invalid:', x)
+
+    return validity
+  })
 
   if (quesData.length === 0) throw new Error('No questions')
 
   return {
     id: Math.floor(Math.random() * 1e5),
-    topic: task.topic || 'Untitled Task',
+    topic: task.topic?.substring(0, 44) || 'Untitled Task',
 
     createdAt: new Date().toISOString(),
     lastEdited: new Date().toISOString(),

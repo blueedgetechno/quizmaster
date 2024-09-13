@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 
 import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons'
 
-import { Button } from '@/components/ui'
+import { Button, Progress } from '@/components/ui'
 
 import { useAppDispatch } from '@/store/hooks'
 
@@ -41,7 +41,12 @@ export const TakeTestScreen = ({ task }: { task: Task }) => {
   }
 
   return (
-    <div className='h-full flex justify-center gap-x-2 pt-8 md:pt-16'>
+    <div className='relative h-full flex justify-center gap-x-2 pt-8 md:pt-16 pb-8'>
+      <Progress
+        value={(100 * (task.resumeIndex + 1)) / task.questions.length}
+        className='absolute top-0 w-full bg-transparent'
+        indicatorClassName='bg-blue-400'
+      />
       <h2 className='text-xl md:text-2xl font-bold'>{task.resumeIndex + 1}.</h2>
       <div className='flex flex-col flex-grow'>
         <div className='pl-2 md:pl-6 mb-4 md:mb-8'>
@@ -54,26 +59,32 @@ export const TakeTestScreen = ({ task }: { task: Task }) => {
             const isCorrect = ques.correctResponse === i + 1
 
             return (
-              <div
-                className={cn(
-                  'flex items-center gap-x-6 p-4 md:p-6 rounded-md',
-                  !isSelected && 'hover:bg-gray-200',
-                  isSelected && isCorrect && 'bg-emerald-400 text-gray-50 font-medium',
-                  selectedMe && !isCorrect && 'border border-4 border-red-300'
-                )}
-                onClick={() => handleSelect(i + 1)}
+              <button
                 key={i}
+                onClick={(e) => {
+                  e.currentTarget.blur()
+                  handleSelect(i + 1)
+                }}
               >
-                <span className='text-xl'>
-                  {String.fromCharCode(97 + i)}
-                  {')'}
-                </span>
-                <p className='text-xl md:text-2xl flex-grow'>{choice}</p>
-                <i>
-                  {selectedMe && !isCorrect && <Cross2Icon className='text-red-500' width={28} height={28} />}
-                  {isSelected && isCorrect && <CheckIcon className='text-gray-50' width={32} height={32} />}
-                </i>
-              </div>
+                <div
+                  className={cn(
+                    'flex items-start h-full gap-x-6 p-4 md:p-6 rounded-md',
+                    !isSelected && 'hover:bg-gray-200',
+                    isSelected && isCorrect && 'bg-emerald-400 text-gray-50 font-medium',
+                    selectedMe && !isCorrect && 'border border-4 border-red-300'
+                  )}
+                >
+                  <span className='text-xl'>
+                    {String.fromCharCode(97 + i)}
+                    {')'}
+                  </span>
+                  <p className='text-xl md:text-2xl text-left flex-grow'>{choice}</p>
+                  <i>
+                    {selectedMe && !isCorrect && <Cross2Icon className='text-red-500' width={28} height={28} />}
+                    {isSelected && isCorrect && <CheckIcon className='text-gray-50' width={32} height={32} />}
+                  </i>
+                </div>
+              </button>
             )
           })}
         </div>
@@ -85,7 +96,7 @@ export const TakeTestScreen = ({ task }: { task: Task }) => {
         )}
         <div className='flex md:justify-end py-12 md:py-24 pr-4 md:pr-8'>
           <Button className='w-full md:w-32' onClick={handleContinue} disabled={!ques.userResponse}>
-            Continue
+            {task.resumeIndex + 1 === task.questions.length ? 'Submit' : 'Continue'}
           </Button>
         </div>
       </div>

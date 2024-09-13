@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -16,8 +17,9 @@ export const HeadNav = () => {
 
   return (
     <nav className='app-nav flex items-center justify-between py-4'>
-      <a href='/' className='text-2xl text-blue-500 font-semibold'>
-        QuizMaster
+      <a href='/' className='flex text-2xl text-blue-500 font-semibold'>
+        <Image src='/logo.png' width={32} height={32} alt='logo' />
+        <span className='-ml-1'>uizMaster</span>
       </a>
       <ul className='flex items-center gap-4'>
         <li>

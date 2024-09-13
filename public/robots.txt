@@ -1,0 +1,4 @@
+# The future is here old man
+
+User-agent: *
+Disallow:
