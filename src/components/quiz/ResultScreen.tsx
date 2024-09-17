@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo } from 'react'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { Label, Pie, PieChart } from 'recharts'
 
 import { Button, Separator } from '@/components/ui'
@@ -14,7 +14,6 @@ import { Task } from '@/types'
 
 export const ResultScreen = ({ task }: { task: Task }) => {
   const dispatch = useAppDispatch()
-  const router = useRouter()
 
   const [totalQuestions, correctResponseCount, incorrectResponseCount] = useMemo(() => {
     const totalQuestions = task.questions.length
@@ -30,8 +29,6 @@ export const ResultScreen = ({ task }: { task: Task }) => {
   ]
 
   const handleReStart = () => dispatch({ type: 'app/reStartQuiz', payload: task.id })
-
-  const handleClose = () => router.push('/')
 
   return (
     <div className='h-full flex justify-center py-[12vh]'>
@@ -106,7 +103,7 @@ export const ResultScreen = ({ task }: { task: Task }) => {
         </div>
         <div className='my-2'></div>
 <div className="w-full flex gap-x-2">
-        <Button variant="outline" className="flex-1" onClick={handleReStart}>Re-Start</Button><Button className="flex-1" onClick={handleClose}>Close</Button>
+        <Button variant="outline" className="flex-1" onClick={handleReStart}>Re-Start</Button><Button className="flex-1" asChild><Link href='/'>Close</Link></Button>
 </div>
       </div>
     </div>
