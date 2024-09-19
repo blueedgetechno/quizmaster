@@ -34,7 +34,7 @@ export function Screen() {
               </TableHeader>
               <TableBody>
                 {tasks.length > 0 &&
-                  tasks
+                  [...tasks]
                     .sort((a, b) => {
                       if (a.state === b.state) {
                         return new Date(b.lastEdited).getTime() - new Date(a.lastEdited).getTime()
