@@ -1,7 +1,9 @@
 'use client'
 
 import { useMemo } from 'react'
+
 import Link from 'next/link'
+
 import { Label, Pie, PieChart } from 'recharts'
 
 import { Button, Separator } from '@/components/ui'
@@ -102,9 +104,14 @@ export const ResultScreen = ({ task }: { task: Task }) => {
           ))}
         </div>
         <div className='my-2'></div>
-<div className="w-full flex gap-x-2">
-        <Button variant="outline" className="flex-1" onClick={handleReStart}>Re-Start</Button><Button className="flex-1" asChild><Link href='/'>Close</Link></Button>
-</div>
+        <div className='w-full flex gap-x-2'>
+          <Button variant='outline' className='flex-1' onClick={handleReStart}>
+            Re-Start
+          </Button>
+          <Button className='flex-1' asChild>
+            <Link href='/'>Close</Link>
+          </Button>
+        </div>
       </div>
     </div>
   )
