@@ -2,7 +2,7 @@ import { type NextRequest } from 'next/server'
 
 import { Task } from '@/types'
 
-import { callbackModel } from './models/openai'
+import { callbackModel } from './models/gemini'
 
 const joinObject = (arg0: object) => {
   return Object.entries(arg0)
