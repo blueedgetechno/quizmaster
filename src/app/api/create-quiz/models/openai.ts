@@ -65,10 +65,12 @@ const mixChoices = (choices: string[], correctOptionIndex: number) => {
 export async function callbackModel(prompt: string) {
   const result = await openai.beta.chat.completions.parse({
     model: 'gpt-4o-mini',
+    //@ts-expect-error expected error here
     messages: [...context, { role: 'user', content: prompt }],
     response_format: zodResponseFormat(QuestionsArray, 'questions_array'),
   })
 
+  //@ts-expect-error expected error here
   const rawResponse: ModelResponse[] = result.choices[0].message.parsed
 
   if (!rawResponse.length) {
