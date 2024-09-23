@@ -1,5 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 
+import { mixChoices } from '../utils'
+
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 })
@@ -57,20 +59,6 @@ interface ModelResponse {
   choices: string[]
   correct_choice: string
   explanation: string
-}
-
-const mixChoices = (choices: string[], correctOptionIndex: number) => {
-  const tmpChoices = [...choices]
-    .map((c, i) => [i + 1, c])
-    .sort(() => Math.random() - 0.5)
-    .sort(() => Math.random() - 0.5)
-    .sort(() => Math.random() - 0.5)
-
-  const newIndex = tmpChoices.findIndex(([i]) => i === correctOptionIndex) + 1
-
-  const shuffledChoices = tmpChoices.map(([, c]) => c)
-
-  return [shuffledChoices, newIndex]
 }
 
 export async function callbackModel(prompt: string) {

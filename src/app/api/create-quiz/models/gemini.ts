@@ -1,5 +1,7 @@
 import { GenerationConfig, GoogleGenerativeAI } from '@google/generative-ai'
 
+import { mixChoices } from '../utils'
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 const generationConfig: GenerationConfig = {
   temperature: 1,
@@ -59,20 +61,6 @@ interface ModelResponse {
   correct_option: string
 
   explanation: string | null
-}
-
-const mixChoices = (choices: string[], correctOptionIndex: number) => {
-  const tmpChoices = [...choices]
-    .map((c, i) => [i + 1, c])
-    .sort(() => Math.random() - 0.5)
-    .sort(() => Math.random() - 0.5)
-    .sort(() => Math.random() - 0.5)
-
-  const newIndex = tmpChoices.findIndex(([i]) => i === correctOptionIndex) + 1
-
-  const shuffledChoices = tmpChoices.map(([, c]) => c)
-
-  return [shuffledChoices, newIndex]
 }
 
 export async function callbackModel(prompt: string) {

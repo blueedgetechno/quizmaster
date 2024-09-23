@@ -2,9 +2,9 @@ import OpenAI from 'openai'
 import { zodResponseFormat } from 'openai/helpers/zod'
 import { z } from 'zod'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+import { mixChoices } from '../utils'
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
 const QuestionsArray = z.array(
   z.object({
@@ -46,20 +46,6 @@ interface ModelResponse {
   choices: string[]
   correctOption: string
   explanation: string
-}
-
-const mixChoices = (choices: string[], correctOptionIndex: number) => {
-  const tmpChoices = [...choices]
-    .map((c, i) => [i + 1, c])
-    .sort(() => Math.random() - 0.5)
-    .sort(() => Math.random() - 0.5)
-    .sort(() => Math.random() - 0.5)
-
-  const newIndex = tmpChoices.findIndex(([i]) => i === correctOptionIndex) + 1
-
-  const shuffledChoices = tmpChoices.map(([, c]) => c)
-
-  return [shuffledChoices, newIndex]
 }
 
 export async function callbackModel(prompt: string) {
