@@ -1,27 +1,23 @@
 import { type NextRequest } from 'next/server'
 
-import { Task } from '@/types'
+import { InformalTask } from '@/types'
 
-import { callbackModel } from './models/gemini'
-
-const joinObject = (arg0: object) => {
-  return Object.entries(arg0)
-    .map((x) => {
-      const [key, value] = x
-      return key[0].toUpperCase() + key.slice(1) + ': ' + value
-    })
-    .join(', ')
-}
+import { callbackModel } from './models/mistral'
+import { iteratorToStream, joinObject } from './utils'
 
 export async function GET() {
   return Response.json({ status: 200, message: '(⌐■_■)' })
 }
 
 export async function POST(req: NextRequest) {
-  const data: Partial<Task & { count: number }> = await req.json()
+  const data: InformalTask = await req.json()
+
+  if (!data.topic || !data.count || !data.grade || !data.difficulty) {
+    return Response.json({ error: 'Missing required fields' }, { status: 400 })
+  }
 
   try {
-    const responseData = await callbackModel(
+    const iterator = callbackModel(
       joinObject({
         topic: data.topic,
         count: data.count,
@@ -30,7 +26,7 @@ export async function POST(req: NextRequest) {
       })
     )
 
-    return Response.json(responseData)
+    return new Response(iteratorToStream(iterator))
   } catch (error) {
     console.log(error)
 

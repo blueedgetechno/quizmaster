@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { Grade, Task, TaskState } from '@/types'
+import { Grade, Question, Task, TaskState } from '@/types'
 
 const initialState = {
   username: 'user_' + Math.floor(Math.random() * 1e5),
@@ -21,6 +21,35 @@ const _Slice = createSlice({
       new_tasks.push({ ...action.payload })
 
       state.tasks = [...new_tasks]
+    },
+    deleteTask: (state, action: { payload: number }) => {
+      state.tasks = state.tasks.filter((x) => x.id !== action.payload)
+    },
+    updateTask: (
+      state,
+      action: {
+        payload: {
+          id: number
+          questions: Question[]
+          generationInProgress: boolean
+        }
+      }
+    ) => {
+      const index = state.tasks.findIndex((x) => x.id === action.payload?.id)
+      if (index === -1) return
+
+      const task = { ...state.tasks[index] }
+
+      if (action.payload.questions !== undefined) {
+        task.questions = [...task.questions.map((x) => ({ ...x })), ...action.payload.questions]
+      }
+
+      if (action.payload.generationInProgress !== undefined) {
+        task.generationInProgress = action.payload.generationInProgress
+      }
+
+      task.lastEdited = new Date().toISOString()
+      state.tasks[index] = { ...task }
     },
     startQuiz: (state, action: { payload: number }) => {
       const index = state.tasks.findIndex((x) => x.id === action.payload)
