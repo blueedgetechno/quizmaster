@@ -1,10 +1,14 @@
 'use client'
 
+import { Player } from '@lottiefiles/react-lottie-player'
+
 import { Button, Separator } from '@/components/ui'
 
 import { useAppDispatch } from '@/store/hooks'
 
 import { Task } from '@/types'
+
+import gradientJson from './lottie/gradient.json'
 
 export const StartScreen = ({ task }: { task: Task }) => {
   const dispatch = useAppDispatch()
@@ -20,8 +24,23 @@ export const StartScreen = ({ task }: { task: Task }) => {
         </div>
         <Separator className='my-4' />
         <div className='flex h-5 justify-between items-center space-x-4 text-sm'>
-          <div>
-            Total: <strong>{task.questions.length}</strong>
+          <div className='flex flex-col items-center'>
+            <span className='w-full'>
+              {task.generationInProgress ? 'Generating' : 'Total'}: <strong>{task.questions.length}</strong>
+              {task.generationInProgress && ` / ${task.intendedLength}`}
+            </span>
+            {task.generationInProgress && (
+              <div className='w-0 h-0 flex flex-col items-center justify-center'>
+                <Player
+                  className='pt-4'
+                  autoplay
+                  loop
+                  speed={2}
+                  src={gradientJson}
+                  style={{ height: 250, width: 250 }}
+                />
+              </div>
+            )}
           </div>
           <Separator orientation='vertical' />
           <div>
@@ -29,7 +48,23 @@ export const StartScreen = ({ task }: { task: Task }) => {
           </div>
         </div>
         <div className='my-4'></div>
-        <Button onClick={handleStart}>Start Quiz</Button>
+        <div className='relative rounded overflow-hidden'>
+          <Button className='w-full' variant={task.generationInProgress ? 'outline' : 'default'} onClick={handleStart}>
+            Start Quiz
+          </Button>
+          {task.generationInProgress && (
+            <div
+              className='transition-all absolute h-full top-0 left-0 bg-primary flex items-center pointer-events-none overflow-hidden'
+              style={{
+                width: `${Number((task.questions.length / task.intendedLength) * 100).toFixed(2)}%`,
+              }}
+            >
+              <span className='text-sm text-primary-foreground' style={{ transform: 'translateX(109px)' }}>
+                Start Quiz
+              </span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

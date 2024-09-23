@@ -11,7 +11,7 @@ import 'styles/globals.css'
 
 export const metadata: Metadata = {
   title: 'QuizMaster',
-  description: 'QuizTime',
+  description: 'Create Quiz on any topic with few clicks',
   icons: [
     {
       rel: 'icon',

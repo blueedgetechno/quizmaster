@@ -40,6 +40,10 @@ export const TakeTestScreen = ({ task }: { task: Task }) => {
     })
   }
 
+  const stillLoading = task.generationInProgress && task.resumeIndex + 1 === task.questions.length
+
+  const isNextDisabled = !ques.userResponse || stillLoading
+
   return (
     <div className='relative h-full flex justify-center gap-x-2 pt-8 md:pt-16 pb-8'>
       <Progress
@@ -95,8 +99,8 @@ export const TakeTestScreen = ({ task }: { task: Task }) => {
           </div>
         )}
         <div className='flex md:justify-end py-12 md:py-24 pr-4 md:pr-8'>
-          <Button className='w-full md:w-32' onClick={handleContinue} disabled={!ques.userResponse}>
-            {task.resumeIndex + 1 === task.questions.length ? 'Submit' : 'Continue'}
+          <Button className='w-full md:w-32' onClick={handleContinue} disabled={isNextDisabled}>
+            {!stillLoading ? (task.resumeIndex + 1 === task.questions.length ? 'Submit' : 'Continue') : 'Loading...'}
           </Button>
         </div>
       </div>

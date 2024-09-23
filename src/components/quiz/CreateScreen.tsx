@@ -16,11 +16,11 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { EducationLevels } from '@/consts'
 import { useToast } from '@/hooks/use-toast'
 import { useAsync } from '@/lib/utils'
-import { Task, TaskDifficultyLevels } from '@/types'
+import { InformalTask, TaskDifficultyLevels } from '@/types'
 
-import loaderJson from './loader.json'
+import loaderJson from './lottie/loader.json'
 
-const FormBox = ({ onSubmit, show }: { onSubmit: (task: Partial<Task>) => void; show: boolean }) => {
+const FormBox = ({ onSubmit, show }: { onSubmit: (task: InformalTask) => void; show: boolean }) => {
   const education = useAppSelector((state) => state.app.education)
 
   const router = useRouter()
@@ -28,7 +28,7 @@ const FormBox = ({ onSubmit, show }: { onSubmit: (task: Partial<Task>) => void; 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const task = Object.fromEntries(new FormData(e.currentTarget).entries())
+    const task: InformalTask = Object.fromEntries(new FormData(e.currentTarget).entries())
     onSubmit(task)
   }
 
@@ -96,19 +96,18 @@ const FormBox = ({ onSubmit, show }: { onSubmit: (task: Partial<Task>) => void; 
   )
 }
 
-const CreateQuiz = ({ task, resetTask }: { task: Partial<Task> | undefined; resetTask: () => void }) => {
-  const { isLoading, error, data, callFn } = useAsync<Task>()
+const CreateQuiz = ({ task, resetTask }: { task: InformalTask | undefined; resetTask: () => void }) => {
+  const { isLoading, error, data: taskId, callFn } = useAsync<number>()
 
   const dispatch = useAppDispatch()
   const { toast } = useToast()
   const router = useRouter()
 
   useEffect(() => {
-    if (data == null) return
+    if (taskId == null) return
 
-    dispatch({ type: 'app/addTask', payload: JSON.parse(JSON.stringify(data)) })
-    router.push(`/quiz/play/${data.id}`)
-  }, [data])
+    router.push(`/quiz/play/${taskId}`)
+  }, [taskId])
 
   useEffect(() => {
     if (error == null) return
@@ -125,7 +124,7 @@ const CreateQuiz = ({ task, resetTask }: { task: Partial<Task> | undefined; rese
   useEffect(() => {
     if (!task) return
 
-    callFn(() => createTask(task))
+    callFn(() => createTask(task, dispatch))
   }, [task])
 
   if (task == null) return null
@@ -145,7 +144,7 @@ const CreateQuiz = ({ task, resetTask }: { task: Partial<Task> | undefined; rese
 }
 
 export default function CreateScreen() {
-  const [task, setTask] = useState<Partial<Task>>()
+  const [task, setTask] = useState<InformalTask>()
 
   return (
     <>
