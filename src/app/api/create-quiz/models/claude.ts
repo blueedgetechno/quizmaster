@@ -12,7 +12,7 @@ const toolsUsed = [
     name: 'questions_array_generator',
     description: 'Array of quiz questions generator in json format, based on user input prompt.',
     input_schema: {
-      type: 'object',
+      type: 'object' as Anthropic.Tool.InputSchema['type'],
       properties: {
         questions_list: {
           type: 'array',
@@ -83,9 +83,10 @@ export async function callbackModel(prompt: string) {
     messages: [{ role: 'user', content: prompt }],
   })
 
-  return result
+  const contentBlock = result.content[0] as Anthropic.ToolUseBlock
+  if (!contentBlock) throw new Error('Invalid response from model')
 
-  const rawResponse: ModelResponse[] = result.choices[0].message.parsed
+  const rawResponse = contentBlock.input as ModelResponse[]
 
   if (!rawResponse.length) {
     throw new Error('Invalid response from model')
@@ -94,7 +95,7 @@ export async function callbackModel(prompt: string) {
   const questions = rawResponse.map((q) => {
     const rawChoices = q.choices
 
-    const initialCorrectOption = Number(q['correctOption'].replace('option_', ''))
+    const initialCorrectOption = Number(q['correct_choice'].replace('option_', ''))
 
     const [choices, correctOption] = mixChoices(rawChoices, initialCorrectOption)
 

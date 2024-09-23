@@ -11,7 +11,7 @@ const QuestionsArray = z.array(
     question: z.string(),
     choices: z.array(z.string()),
     correctOption: z.string(),
-    explanation: z.array(z.string()),
+    explanation: z.string(),
   })
 )
 
@@ -39,7 +39,7 @@ const context = [
           explanation: The equation\n8x + 11 = x + 3\n7x = -8\nx = -8/7\nis not a rational number or an integer.
         `,
   },
-]
+] as Array<OpenAI.ChatCompletionSystemMessageParam>
 
 interface ModelResponse {
   question: string
@@ -63,15 +63,18 @@ const mixChoices = (choices: string[], correctOptionIndex: number) => {
 }
 
 export async function callbackModel(prompt: string) {
+  const userPrompt = {
+    role: 'user',
+    content: prompt,
+  } as OpenAI.ChatCompletionUserMessageParam
+
   const result = await openai.beta.chat.completions.parse({
     model: 'gpt-4o-mini',
-    //@ts-expect-error expected error here
-    messages: [...context, { role: 'user', content: prompt }],
+    messages: [...context, userPrompt],
     response_format: zodResponseFormat(QuestionsArray, 'questions_array'),
   })
 
-  //@ts-expect-error expected error here
-  const rawResponse: ModelResponse[] = result.choices[0].message.parsed
+  const rawResponse: ModelResponse[] = result.choices[0].message.parsed || []
 
   if (!rawResponse.length) {
     throw new Error('Invalid response from model')
