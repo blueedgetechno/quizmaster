@@ -1,9 +1,8 @@
-interface ModelResponse {
-  question: string
-  choices: string[]
-  correctResponse: string
-  explanation: string
-}
+import { Question } from '@/types'
+
+import { doubleCheckMethod } from '../double-check/gemini'
+
+type ModelResponse = Omit<Question, 'userResponse'>
 
 export const mixChoices = (choices: string[], correctResponseIndex: number) => {
   const tmpChoices = [...choices]
@@ -19,8 +18,41 @@ export const mixChoices = (choices: string[], correctResponseIndex: number) => {
   return [shuffledChoices, newIndex]
 }
 
-export const formatResponse = (response: string) => {
-  const rawResponse: ModelResponse[] = JSON.parse(response)
+export const formatResponse = async (response: string) => {
+  const rawParsedResponse: ModelResponse[] = JSON.parse(response)
+  const rawResponse = await Promise.all(
+    rawParsedResponse.map(async (q) => {
+      try {
+        const checkResponse = await doubleCheckMethod(JSON.stringify(q))
+
+        const newChoices = [...q.choices]
+
+        if (checkResponse.isMissingChoice) {
+          newChoices[3] = checkResponse.correctAnswer
+
+          return {
+            ...q,
+            choices: newChoices,
+            correctResponse: 4,
+          }
+        }
+
+        if (checkResponse.correctResponseNumber != null && checkResponse.correctResponseNumber != q.correctResponse) {
+          newChoices[checkResponse.correctResponseNumber - 1] = checkResponse.correctAnswer
+
+          return {
+            ...q,
+            choices: newChoices,
+            correctResponse: checkResponse.correctResponseNumber,
+          }
+        }
+      } catch (error) {
+        // no console
+      }
+
+      return q
+    })
+  )
 
   if (!rawResponse.length) {
     throw new Error('Invalid response from model')
@@ -29,14 +61,14 @@ export const formatResponse = (response: string) => {
   const questions = rawResponse.map((q) => {
     const rawChoices = q.choices
 
-    const initialCorrectOption = Number(q['correctResponse'].replace('option_', ''))
+    const initialCorrectOption = Number(String(q['correctResponse']).replace('option_', ''))
 
     const [choices, correctOption] = mixChoices(rawChoices, initialCorrectOption)
 
     return {
       question: q.question,
-      choices: choices,
-      correctResponse: correctOption,
+      choices: choices as string[],
+      correctResponse: correctOption as number,
       explanation: q.explanation,
     }
   })

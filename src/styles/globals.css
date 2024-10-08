@@ -4,19 +4,17 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+html {
   --background: #ffffff;
   --background-light: #f8f8f8;
   --foreground: #171717;
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --background-light: #101010;
-    --foreground: #ededed;
-  }
-} */
+html[data-theme='dark'] {
+  --background: #0a0a0a;
+  --background-light: #101010;
+  --foreground: #ededed;
+}
 
 body {
   color: var(--foreground);
@@ -155,11 +153,11 @@ input[type='number'] {
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
-    --chart-1: 220 70% 50%;
+    --chart-1: 6 76% 61%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --chart-5: 220 70% 50%;
   }
 }
 

@@ -64,6 +64,7 @@ export const TakeTestScreen = ({ task }: { task: Task }) => {
 
             return (
               <button
+                disabled={isSelected}
                 key={i}
                 onClick={(e) => {
                   e.currentTarget.blur()
@@ -73,9 +74,9 @@ export const TakeTestScreen = ({ task }: { task: Task }) => {
                 <div
                   className={cn(
                     'flex items-start h-full gap-x-6 p-4 md:p-6 rounded-md',
-                    !isSelected && 'hover:bg-gray-200',
-                    isSelected && isCorrect && 'bg-emerald-400 text-gray-50 font-medium',
-                    selectedMe && !isCorrect && 'border border-4 border-red-300'
+                    !isSelected && 'hover:bg-gray-200 hover:dark:bg-zinc-900',
+                    isSelected && isCorrect && 'bg-emerald-400 dark:bg-emerald-600 text-gray-50 font-medium',
+                    selectedMe && !isCorrect && 'border border-4 border-red-300 dark:border-red-800'
                   )}
                 >
                   <span className='text-xl'>

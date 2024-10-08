@@ -8,3 +8,7 @@ export const EducationLevels = [
   'College 3rd year',
   'College Final year',
 ] as const
+
+export const GenModels = ['gemini', 'mistral']
+
+export const LOAD_COUNT = 10

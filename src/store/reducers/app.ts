@@ -4,6 +4,7 @@ import { Grade, Question, Task, TaskState } from '@/types'
 
 const initialState = {
   username: 'user_' + Math.floor(Math.random() * 1e5),
+  model: 'gemini',
   education: {
     grade: '' as Grade,
   },
@@ -14,6 +15,9 @@ const _Slice = createSlice({
   name: 'app',
   initialState: initialState,
   reducers: {
+    updateChoiceOfModel: (state, action: { payload: string }) => {
+      state.model = action.payload
+    },
     addTask: (state, action: { payload: Task }) => {
       state.education.grade = action.payload.grade
 
@@ -50,6 +54,10 @@ const _Slice = createSlice({
 
       task.lastEdited = new Date().toISOString()
       state.tasks[index] = { ...task }
+
+      if (action.payload.generationInProgress === false && task.questions.length < 1) {
+        state.tasks = state.tasks.filter((x) => x.id !== action.payload.id)
+      }
     },
     startQuiz: (state, action: { payload: number }) => {
       const index = state.tasks.findIndex((x) => x.id === action.payload)

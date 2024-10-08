@@ -3,29 +3,38 @@ import type { AppDispatch } from '@/store'
 import { InformalTask, Question, Task, TaskDifficultyLevels, TaskState } from '@/types'
 
 const validateQuestion = (x: Question) => {
-  if (!x) return false
-  if (!x.question || !x.question.length) return false
+  if (!x) throw 'Invalid question object'
 
-  if (!x.choices || !x.choices.length) return false
-  if (!x.choices.every((x) => x && x.length)) return false
+  if (!x.question || !x.question.length) throw 'Invalid question string'
 
-  if (x.correctResponse == null) return false
-  if (x.correctResponse < 0 || x.correctResponse > x.choices.length) return false
+  if (!x.choices || !x.choices.length) throw 'Invalid choices array'
+  if (x.choices.some((x) => x == null)) throw 'Invalid choice string'
+
+  if (x.correctResponse == null) throw 'Invalid correctResponse'
+  if (x.correctResponse < 0 || x.correctResponse > x.choices.length) throw 'Invalid correctResponse'
 
   return true
 }
 
 const filterValid = (x: Question) => {
-  const validity = validateQuestion(x)
+  try {
+    validateQuestion(x)
 
-  if (!validity) console.log('Invalid:', x)
-
-  return validity
+    return true
+  } catch (e) {
+    console.log('Invalid:', e, x)
+    return false
+  }
 }
 
 // INFO: We are resorting to using fetch because axios doesn't support
 // EventStream on POST request in browser, even in 2024
-export const createTask = async (task: InformalTask, dispatch: AppDispatch) => {
+export const createTask = async (task: InformalTask & { model?: string }, dispatch: AppDispatch) => {
+  dispatch({
+    type: 'app/updateChoiceOfModel',
+    payload: task.model,
+  })
+
   return new Promise<number>(async (resolve, reject) => {
     let resolved = false
     const taskId = Math.floor(Math.random() * 1e7)
@@ -50,8 +59,16 @@ export const createTask = async (task: InformalTask, dispatch: AppDispatch) => {
       const reader = response.body.getReader()
       const decoder = new TextDecoder()
 
+      const HARD_LIMIT = 1e5
+      let i = 0
+
       // reading the response stream
       while (true) {
+        if (i++ > HARD_LIMIT) {
+          console.log('[ERROR] Hard limit reached')
+          break
+        }
+
         const { done, value } = await reader.read()
 
         if (done) break

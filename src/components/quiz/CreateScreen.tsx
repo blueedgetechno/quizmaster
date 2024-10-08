@@ -5,38 +5,77 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { Player } from '@lottiefiles/react-lottie-player'
+import { InfoCircledIcon } from '@radix-ui/react-icons'
 
 import { Button, Input, Label, NumInput } from '@/components/ui'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 import { createTask } from '@/store/actions/app'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 
-import { EducationLevels } from '@/consts'
+import { EducationLevels, GenModels } from '@/consts'
 import { useToast } from '@/hooks/use-toast'
 import { useAsync } from '@/lib/utils'
 import { InformalTask, TaskDifficultyLevels } from '@/types'
 
 import loaderJson from './lottie/loader.json'
 
-const FormBox = ({ onSubmit, show }: { onSubmit: (task: InformalTask) => void; show: boolean }) => {
+interface ModifiedInformalTask extends InformalTask {
+  model?: string
+}
+
+const FormBox = ({ onSubmit, show }: { onSubmit: (task: ModifiedInformalTask) => void; show: boolean }) => {
   const education = useAppSelector((state) => state.app.education)
+  const choiceOfModel = useAppSelector((state) => state.app.model)
 
   const router = useRouter()
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const task: InformalTask = Object.fromEntries(new FormData(e.currentTarget).entries())
+    const task: ModifiedInformalTask = Object.fromEntries(new FormData(e.currentTarget).entries())
     onSubmit(task)
   }
 
   return (
     <form className={show ? 'block' : 'hidden'} onSubmit={handleSubmit}>
-      <Card className='w-full md:w-[480px]'>
+      <Card className='w-full md:w-[480px] dark:bg-zinc-900'>
         <CardHeader>
-          <CardTitle>Create Quiz</CardTitle>
+          <CardTitle>
+            <div className='flex items-center justify-between'>
+              <span>Create Quiz</span>
+              <div className='flex items-center gap-x-1'>
+                <Select
+                  required
+                  defaultValue={GenModels.includes(choiceOfModel) ? choiceOfModel : GenModels[0]}
+                  name='model'
+                >
+                  <SelectTrigger className='w-auto pr-0 shadow-none border-none font-normal' id='model'>
+                    <SelectValue placeholder='model' />
+                  </SelectTrigger>
+                  <SelectContent position='popper'>
+                    {GenModels.map((model) => (
+                      <SelectItem value={model} key={model}>
+                        {model}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger onClick={(e) => e.preventDefault()}>
+                      <InfoCircledIcon />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>AI Model used to generate the quiz.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </div>
+          </CardTitle>
           <CardDescription>Create your quiz with few easy steps.</CardDescription>
         </CardHeader>
         <CardContent>
@@ -96,7 +135,7 @@ const FormBox = ({ onSubmit, show }: { onSubmit: (task: InformalTask) => void; s
   )
 }
 
-const CreateQuiz = ({ task, resetTask }: { task: InformalTask | undefined; resetTask: () => void }) => {
+const CreateQuiz = (props: { task: ModifiedInformalTask | undefined; resetTask: () => void }) => {
   const { isLoading, error, data: taskId, callFn } = useAsync<number>()
 
   const dispatch = useAppDispatch()
@@ -104,10 +143,10 @@ const CreateQuiz = ({ task, resetTask }: { task: InformalTask | undefined; reset
   const router = useRouter()
 
   useEffect(() => {
-    if (taskId == null) return
+    if (taskId == null || isLoading) return
 
     router.push(`/quiz/play/${taskId}`)
-  }, [taskId])
+  }, [taskId, isLoading])
 
   useEffect(() => {
     if (error == null) return
@@ -118,16 +157,16 @@ const CreateQuiz = ({ task, resetTask }: { task: InformalTask | undefined; reset
       description: String(error),
     })
 
-    if (resetTask) resetTask()
+    if (props.resetTask) props.resetTask()
   }, [error])
 
   useEffect(() => {
-    if (!task) return
+    if (!props.task) return
 
-    callFn(() => createTask(task, dispatch))
-  }, [task])
+    callFn(() => createTask(props.task!, dispatch))
+  }, [props.task])
 
-  if (task == null) return null
+  if (props.task == null) return null
 
   return (
     <div className='h-full flex flex-col items-center'>
@@ -144,11 +183,11 @@ const CreateQuiz = ({ task, resetTask }: { task: InformalTask | undefined; reset
 }
 
 export default function CreateScreen() {
-  const [task, setTask] = useState<InformalTask>()
+  const [task, setTask] = useState<ModifiedInformalTask>()
 
   return (
     <>
-      {<FormBox show={task == null} onSubmit={(data) => setTask(data)}></FormBox>}
+      <FormBox show={task == null} onSubmit={(data) => setTask(data)} />
       <CreateQuiz task={task} resetTask={() => setTask(undefined)}></CreateQuiz>
     </>
   )
