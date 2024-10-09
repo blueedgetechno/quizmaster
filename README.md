@@ -74,4 +74,4 @@ Visit 💻✨: [quiz.blueedge.me](https://quiz.blueedge.me/)
 - Open a pull request.
 
 ## License
-This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for more information.
+This project is licensed under the Creative Commons Zero License. See the [LICENSE](./LICENSE) file for more information.
