@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import NextTopLoader from 'nextjs-toploader'
 
 import { FootNav } from 'components/FooterContent'
 import { HeadNav } from 'components/HeadNav'
@@ -56,6 +57,7 @@ export default function RootLayout({
         <meta name='viewport' content='width=device-width, initial-scale=1.0' />
       </head>
       <body className='antialiased'>
+        <NextTopLoader />
         <Providers>
           <div className='app-wrapper'>
             <div className='app-nav-box'>

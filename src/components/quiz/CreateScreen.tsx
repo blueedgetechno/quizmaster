@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app'
 
 import { Player } from '@lottiefiles/react-lottie-player'
 import { InfoCircledIcon } from '@radix-ui/react-icons'
@@ -66,7 +66,7 @@ const FormBox = ({ onSubmit, show }: { onSubmit: (task: ModifiedInformalTask) =>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger onClick={(e) => e.preventDefault()}>
-                      <InfoCircledIcon />
+                      <InfoCircledIcon className='text-gray-400 dark:text-gray-600' />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>AI Model used to generate the quiz.</p>

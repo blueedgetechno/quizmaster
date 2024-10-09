@@ -31,7 +31,7 @@ const NumInput = React.forwardRef<HTMLInputElement, InputProps>(
       <span className="flex items-center gap-x-1">
         <button
           type="button"
-          className="border rounded-md h-5 px-0.5"
+          className="border rounded-md bg-muted h-5 px-0.5"
           onClick={() => inputRef.current && inputRef.current.stepDown()}>
           <MinusIcon width={16} />
         </button>
@@ -46,7 +46,7 @@ const NumInput = React.forwardRef<HTMLInputElement, InputProps>(
         />
         <button
           type="button"
-          className="border rounded-md h-5 px-0.5"
+          className="border rounded-md bg-muted h-5 px-0.5"
           onClick={() => inputRef.current && inputRef.current.stepUp()}>
           <PlusIcon width={16} />
         </button>

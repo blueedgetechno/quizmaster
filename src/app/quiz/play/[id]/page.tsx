@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app'
 
 import QuizScreen from '@/components/quiz'
 import { Button } from '@/components/ui'
@@ -16,6 +16,7 @@ export default function Screen({ params }: { params: { id: number } }) {
   const task = useAppSelector((state) => state.app.tasks.find((x) => x.id == params.id))
 
   const { toast } = useToast()
+
   const router = useRouter()
   const dispatch = useAppDispatch()
 

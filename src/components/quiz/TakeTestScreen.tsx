@@ -48,7 +48,7 @@ export const TakeTestScreen = ({ task }: { task: Task }) => {
     <div className='relative h-full flex justify-center gap-x-2 pt-8 md:pt-16 pb-8'>
       <Progress
         value={(100 * (task.resumeIndex + 1)) / task.questions.length}
-        className='absolute top-0 w-full bg-transparent'
+        className='absolute top-0 w-full bg-muted'
         indicatorClassName='bg-blue-400'
       />
       <h2 className='text-xl md:text-2xl font-bold'>{task.resumeIndex + 1}.</h2>
@@ -94,9 +94,9 @@ export const TakeTestScreen = ({ task }: { task: Task }) => {
           })}
         </div>
         {ques.userResponse != null && (
-          <div className='flex flex-col md:flex-row mt-8 md:mt-16 gap-x-4 text-lg'>
+          <div className='flex flex-col md:flex-row mt-8 md:mt-16 gap-x-4 gap-y-2 text-lg'>
             <span className='font-semibold'>Explanation:</span>
-            <p>{ques.explanation}</p>
+            <p className='bg-muted md:bg-transparent py-2 px-3 md:p-0 rounded-lg'>{ques.explanation}</p>
           </div>
         )}
         <div className='flex md:justify-end py-12 md:py-24 pr-4 md:pr-8'>

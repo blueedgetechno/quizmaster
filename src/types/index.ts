@@ -62,6 +62,11 @@ export interface Task {
   grade: Grade
   state: TaskState
   difficulty: TaskDifficultyLevels
+
+  image?: {
+    thumbnailUrl: string
+    accentColor: string
+  }
 }
 
 export interface InformalTask extends Partial<Task> {

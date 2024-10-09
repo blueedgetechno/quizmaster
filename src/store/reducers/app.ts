@@ -34,8 +34,9 @@ const _Slice = createSlice({
       action: {
         payload: {
           id: number
-          questions: Question[]
-          generationInProgress: boolean
+          questions?: Question[]
+          generationInProgress?: boolean
+          image: Task['image']
         }
       }
     ) => {
@@ -50,6 +51,10 @@ const _Slice = createSlice({
 
       if (action.payload.generationInProgress !== undefined) {
         task.generationInProgress = action.payload.generationInProgress
+      }
+
+      if (action.payload.image !== undefined) {
+        task.image = action.payload.image
       }
 
       task.lastEdited = new Date().toISOString()

@@ -1,3 +1,7 @@
+import { createAsyncThunk } from '@reduxjs/toolkit'
+
+import axios from 'axios'
+
 import type { AppDispatch } from '@/store'
 
 import { InformalTask, Question, Task, TaskDifficultyLevels, TaskState } from '@/types'
@@ -145,3 +149,22 @@ export const createTask = async (task: InformalTask & { model?: string }, dispat
     })
   })
 }
+
+export const fetchImage = createAsyncThunk('app/fetchImage', async (task: Task, { dispatch }) => {
+  if (task.image) return
+
+  const response = await axios.post('/api/fetch-image', { topic: task.topic })
+
+  if (response.data.error) {
+    console.log('[ERROR] fetchImage:', response.data.error)
+    return
+  }
+
+  dispatch({
+    type: 'app/updateTask',
+    payload: {
+      id: task.id,
+      image: response.data,
+    },
+  })
+})

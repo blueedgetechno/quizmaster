@@ -65,6 +65,12 @@ export const StartScreen = ({ task }: { task: Task }) => {
             </div>
           )}
         </div>
+        {task.generationInProgress && (
+          <div className='text-xs my-4'>
+            You can start the quiz. <br />
+            It will keep generating in the background.
+          </div>
+        )}
       </div>
     </div>
   )
