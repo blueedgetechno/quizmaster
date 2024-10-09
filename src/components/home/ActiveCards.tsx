@@ -18,10 +18,13 @@ const TopicCard = ({ task }: { task: Task }) => {
   return (
     <Link className='p-1 cursor-pointer' href={`/quiz/play/${task.id}`}>
       <Card>
-        <div className='relative rounded-lg overflow-hidden ' style={{ height: 240 }}>
+        <div
+          className='relative rounded-lg overflow-hidden bg-gradient-to-r from-sky-500 to-indigo-500'
+          style={{ height: 240 }}
+        >
           {task.image?.thumbnailUrl && (
             <img
-              className='w-full h-full object-cover rounded-xl object-top clear-both'
+              className='w-full h-full object-cover object-top'
               src={task.image.thumbnailUrl}
               width='100%'
               height={240}
@@ -29,7 +32,7 @@ const TopicCard = ({ task }: { task: Task }) => {
             />
           )}
           <div
-            className='absolute bottom-0 w-full pl-4 py-2'
+            className='absolute bottom-0 w-full pl-4 py-2 text-gray-50'
             style={{ background: '#' + (task.image?.accentColor || '020202') }}
           >
             <h2 className='font-bold drop-shadow-sm tracking-wide truncate'>{task.topic}</h2>
