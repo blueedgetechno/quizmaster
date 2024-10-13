@@ -35,6 +35,8 @@ Visit 💻✨: [quiz.blueedge.me](https://quiz.blueedge.me/)
 - **Frontend:** Next.js (v14), ui/shadcn
 - **Styling:** CSS, Bootstrap (or Tailwind CSS)
 - **External API:** Gemini API for prompt-based question generation, Bing Image Search API for images
+- **Deployment:** Vercel
+- **Telemetry:** Firebase, Sentry
 
 ## Installation
 
