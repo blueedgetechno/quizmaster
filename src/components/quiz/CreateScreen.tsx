@@ -87,7 +87,7 @@ const FormBox = ({ onSubmit, show }: { onSubmit: (task: ModifiedInformalTask) =>
               </div>
               <div className='flex-1 flex flex-col space-y-1.5'>
                 <Label htmlFor='count'>Count *</Label>
-                <NumInput name='count' min={5} max={20} step={5} required defaultValue={5} />
+                <NumInput name='count' min={5} max={10} step={5} required defaultValue={5} />
               </div>
             </div>
             <div className='flex space-x-2'>
