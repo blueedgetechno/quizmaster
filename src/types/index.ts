@@ -69,6 +69,8 @@ export interface Task {
   }
 }
 
+export type TaskLite = Omit<Task, 'questions' | 'image'>
+
 export interface InformalTask extends Partial<Task> {
   count?: number
 }

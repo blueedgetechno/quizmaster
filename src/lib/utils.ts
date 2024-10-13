@@ -33,6 +33,12 @@ export function useAsync<T>() {
   return { data, error, isLoading, callFn }
 }
 
+export const splitAndCapitalize = (s: string) =>
+  s
+    .split('-')
+    .map((w) => w[0].toUpperCase() + w.slice(1))
+    .join(' ')
+
 export const plural = (n: number, s: string) => (n === 1 ? s : s + 's')
 export const doubleDigit = (n: number) => (n < 10 ? '0' + n : n)
 

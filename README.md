@@ -37,18 +37,22 @@ Visit 💻✨: [quiz.blueedge.me](https://quiz.blueedge.me/)
 - **External API:** Gemini API for prompt-based question generation, Bing Image Search API for images
 
 ## Installation
+
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/blueedgetechno/quizmaster.git
    cd quizmaster
    ```
 
 2. **Install dependencies:**
+
    ```bash
    yarn install
    ```
 
 3. **Make a `.env.local` file**
+
    ```.env
    GEMINI_API_KEY=AIza...
    HUGGING_FACE_API_KEY=hf_...
@@ -56,17 +60,18 @@ Visit 💻✨: [quiz.blueedge.me](https://quiz.blueedge.me/)
    ```
 
    Gemini API Key: [aistudio.google.com](https://aistudio.google.com/app/apikey)
-   
-   Hugging Face API Key: [huggingface.co](https://huggingface.co/settings/tokens)  (Optional if you intend to use gemini only)
+
+   Hugging Face API Key: [huggingface.co](https://huggingface.co/settings/tokens) (Optional if you intend to use gemini only)
 
    Bing Api Key (Optional): [Create an azure service](https://aka.ms/bingapisignup)
 
-3. **Run:**
+4. **Run:**
    ```bash
    yarn dev
    ```
 
 ## Contributing
+
 - Fork the repository.
 - Create your feature branch (git checkout -b feature/NewFeature).
 - Commit your changes (git commit -m 'Add new feature').
@@ -74,4 +79,5 @@ Visit 💻✨: [quiz.blueedge.me](https://quiz.blueedge.me/)
 - Open a pull request.
 
 ## License
+
 This project is licensed under the Creative Commons Zero License. See the [LICENSE](./LICENSE) file for more information.

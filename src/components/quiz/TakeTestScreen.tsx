@@ -5,11 +5,57 @@ import { useMemo } from 'react'
 import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons'
 
 import { Button, Progress } from '@/components/ui'
+import { UilFlag } from '@/components/ui/icons'
 
 import { useAppDispatch } from '@/store/hooks'
 
 import { cn } from '@/lib/utils'
-import { Task } from '@/types'
+import { Question, Task } from '@/types'
+
+import ReportButton from './ReportButton'
+
+interface IQuestionChoice {
+  ques: Question
+  index: number
+  choice: string
+  handleSelect?: (choice: number) => void
+}
+
+const QuestionChoice = ({ ques, index, handleSelect, choice }: IQuestionChoice) => {
+  const isSelected = ques.userResponse != null
+  const selectedMe = isSelected && ques.userResponse === index + 1
+  const isCorrect = ques.correctResponse === index + 1
+
+  return (
+    <button
+      disabled={isSelected}
+      onClick={(e) => {
+        e.currentTarget.blur()
+
+        if (handleSelect) handleSelect(index + 1)
+      }}
+    >
+      <div
+        className={cn(
+          'flex items-start h-full gap-x-6 p-4 md:p-6 rounded-md',
+          !isSelected && 'hover:bg-gray-200 hover:dark:bg-zinc-900',
+          isSelected && isCorrect && 'bg-emerald-400 dark:bg-emerald-600 text-gray-50 font-medium',
+          selectedMe && !isCorrect && 'border border-4 border-red-300 dark:border-red-800'
+        )}
+      >
+        <span className='text-xl'>
+          {String.fromCharCode(97 + index)}
+          {')'}
+        </span>
+        <p className='text-xl md:text-2xl text-left flex-grow'>{choice}</p>
+        <i>
+          {selectedMe && !isCorrect && <Cross2Icon className='text-red-500' width={28} height={28} />}
+          {isSelected && isCorrect && <CheckIcon className='text-gray-50' width={32} height={32} />}
+        </i>
+      </div>
+    </button>
+  )
+}
 
 export const TakeTestScreen = ({ task }: { task: Task }) => {
   const dispatch = useAppDispatch()
@@ -57,46 +103,17 @@ export const TakeTestScreen = ({ task }: { task: Task }) => {
           <p className='mt-px text-xl md:text-2xl'>{ques.question}</p>
         </div>
         <div className='grid grid-cols-1 md:grid-cols-2 justify-between gap-x-1 gap-y-2 md:gap-y-1 md:pr-8'>
-          {ques.choices.map((choice, i) => {
-            const isSelected = ques.userResponse != null
-            const selectedMe = isSelected && ques.userResponse === i + 1
-            const isCorrect = ques.correctResponse === i + 1
-
-            return (
-              <button
-                disabled={isSelected}
-                key={i}
-                onClick={(e) => {
-                  e.currentTarget.blur()
-                  handleSelect(i + 1)
-                }}
-              >
-                <div
-                  className={cn(
-                    'flex items-start h-full gap-x-6 p-4 md:p-6 rounded-md',
-                    !isSelected && 'hover:bg-gray-200 hover:dark:bg-zinc-900',
-                    isSelected && isCorrect && 'bg-emerald-400 dark:bg-emerald-600 text-gray-50 font-medium',
-                    selectedMe && !isCorrect && 'border border-4 border-red-300 dark:border-red-800'
-                  )}
-                >
-                  <span className='text-xl'>
-                    {String.fromCharCode(97 + i)}
-                    {')'}
-                  </span>
-                  <p className='text-xl md:text-2xl text-left flex-grow'>{choice}</p>
-                  <i>
-                    {selectedMe && !isCorrect && <Cross2Icon className='text-red-500' width={28} height={28} />}
-                    {isSelected && isCorrect && <CheckIcon className='text-gray-50' width={32} height={32} />}
-                  </i>
-                </div>
-              </button>
-            )
-          })}
+          {ques.choices.map((choice, i) => (
+            <QuestionChoice ques={ques} key={i} index={i} choice={choice} handleSelect={handleSelect} />
+          ))}
         </div>
         {ques.userResponse != null && (
-          <div className='flex flex-col md:flex-row mt-8 md:mt-16 gap-x-4 gap-y-2 text-lg'>
+          <div className='grid grid-cols-2 items-center md:items-start md:flex md:flex-row mt-8 md:mt-16 gap-x-4 gap-y-2 text-lg'>
             <span className='font-semibold'>Explanation:</span>
-            <p className='bg-muted md:bg-transparent py-2 px-3 md:p-0 rounded-lg'>{ques.explanation}</p>
+            <div className='md:order-last md:mr-8 -mt-2 flex justify-end'>
+              <ReportButton question={ques} />
+            </div>
+            <p className='col-span-2 bg-muted md:bg-transparent py-2 px-3 md:p-0 rounded-lg'>{ques.explanation}</p>
           </div>
         )}
         <div className='flex md:justify-end py-12 md:py-24 pr-4 md:pr-8'>
