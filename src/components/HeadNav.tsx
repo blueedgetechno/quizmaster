@@ -10,6 +10,7 @@ import { MoonIcon, PlusIcon, ReloadIcon, SunIcon } from '@radix-ui/react-icons'
 import { useAppSelector } from 'store/hooks'
 
 import { Avatar, AvatarFallback, AvatarImage, Button } from '@/components/ui'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 export const HeadNav = () => {
   const [theme, setAppTheme] = useState<string | null>(null)
@@ -59,34 +60,70 @@ export const HeadNav = () => {
       <ul className='flex items-center gap-4'>
         <li>
           {pathname !== '/quiz/new' && (
-            <Button asChild>
-              <Link href='/quiz/new'>
-                <span className='hidden md:block'>Create Quiz</span>
-                <PlusIcon className='block md:hidden' width={16} />
-              </Link>
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button asChild>
+                    <Link href='/quiz/new'>
+                      <span className='hidden md:block'>Create Quiz</span>
+                      <PlusIcon className='block md:hidden' width={16} />
+                    </Link>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Create a new quiz</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           )}
           {pathname === '/quiz/new' && (
-            <Button onClick={() => window.location.reload()}>
-              <span className='hidden md:block'>Refresh</span>
-              <ReloadIcon className='block md:hidden' width={16} />
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button onClick={() => window.location.reload()}>
+                    <span className='hidden md:block'>Refresh</span>
+                    <ReloadIcon className='block md:hidden' width={16} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Refresh the current page</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           )}
         </li>
         <li className='flex items-center'>
-          <button onClick={toggleTheme}>
-            {theme === 'dark' ? (
-              <MoonIcon width={24} height={24} className='text-gray-400' />
-            ) : (
-              <SunIcon width={24} height={24} className='text-gray-600' />
-            )}
-          </button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button onClick={toggleTheme}>
+                  {theme === 'dark' ? (
+                    <MoonIcon width={24} height={24} className='text-gray-400' />
+                  ) : (
+                    <SunIcon width={24} height={24} className='text-gray-600' />
+                  )}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Toggle dark/light theme</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </li>
         <li className='flex items-center gap-x-2'>
-          <Avatar className='w-10 h-10 border-2 border-blue-400'>
-            <AvatarImage src={pfpUrl} alt='pfp' />
-            <AvatarFallback>U</AvatarFallback>
-          </Avatar>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Avatar className='w-10 h-10 border-2 border-blue-400'>
+                  <AvatarImage src={pfpUrl} alt='pfp' />
+                  <AvatarFallback>U</AvatarFallback>
+                </Avatar>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>User profile</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           {/* <span className='hidden md:block'>{username}</span> */}
         </li>
       </ul>
